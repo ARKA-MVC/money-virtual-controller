@@ -1,4 +1,4 @@
-#Money Virtual Controller
+# Money Virtual Controller
 Money Virtual Controller (MVC) is a flexible, mobile-ready, ReactJS powered money management app.
 
 To take part in MVC's development, first you need to have `NodeJS` and `npm` installed on your computer. 
