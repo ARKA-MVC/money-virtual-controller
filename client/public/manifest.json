@@ -1,0 +1,6 @@
+{
+  "short_name": "MVC",
+  "name": "Money Virtual Controller",
+  "start_url": ".",
+  "display": "standalone"
+}
