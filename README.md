@@ -6,7 +6,7 @@ Then pull this repo to your local and do these steps:
 <br>
 1. Open this project in your terminal and run:
 ```
-npm run init
+npm i && npm run init
 ```
 2. Start both servers for development by:
 ```
