@@ -5,13 +5,17 @@ To take part in MVC's development, first you need to have `NodeJS` and `npm` ins
 Then pull this repo to your local and do these steps:
 <br>
 1. Open this project in your terminal and run:
-`npm run init`
-<br>
+```
+npm run init
+```
 2. Start both servers for development by:
-`npm run dev`
-<br>
+```
+npm run dev
+```
 To start backend server only, please `cd` to `api` folder and run:
-`npm run dev`
+```
+npm run dev
+```
 The same thing happens when you want to run client server only, but `cd` to `client` folder instead.
 
 Happy coding maifen!!!
