@@ -1,12 +1,14 @@
 const pool = require('../../config/db.config.js');
 const registerService = {};
 
-registerService.createNewUser = (name, age, email) => {
-  const sql = `CALL procUserInsert(${name}, ${age}, ${email})`;
-  pool.query(sql, (err, results, fields) => {
-    if (err) throw err;
-    console.log(results);
-    console.log(fields);
+registerService.createNewUser = (user, callback) => {
+  const sql = `CALL procUserInsert("${user.name}", ${user.age}, "${user.email}")`;
+  pool.query(sql, (err, results) => {
+    if (!err) {
+      return callback(null, results);
+    } else {
+      return callback(err);
+    }
   })
 }
 
