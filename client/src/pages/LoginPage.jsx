@@ -30,7 +30,7 @@ export default class LoginPage extends Component {
       age: state.age
     })
       .then((res) => {
-        console.log(res.data.message);
+        console.log(res.data.results);
       })
       .catch((err) => {
         console.log(err);
