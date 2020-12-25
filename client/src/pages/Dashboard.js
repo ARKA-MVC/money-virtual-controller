@@ -1,48 +1,22 @@
 import React, { useEffect } from "react";
 import clsx from "clsx";
-import {
-  createMuiTheme,
-  makeStyles,
-  ThemeProvider,
-} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import Drawer from "@material-ui/core/Drawer";
-import Box from "@material-ui/core/Box";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
 import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
-import Badge from "@material-ui/core/Badge";
-import Container from "@material-ui/core/Container";
-import Grid from "@material-ui/core/Grid";
-import Paper from "@material-ui/core/Paper";
-import Link from "@material-ui/core/Link";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import AddIcon from "@material-ui/icons/Add";
-import NotificationsIcon from "@material-ui/icons/Notifications";
-import { mainListItems, secondaryListItems } from "./ListItems";
-import { deepOrange, orange } from "@material-ui/core/colors";
+import { mainListItems, secondaryListItems, thirdListItems } from "./ListItems";
 import { Button } from "@material-ui/core";
 import CreateTransModal from "../components/Modal/CreateTransModal";
-// import Chart from './Chart';
-// import Deposits from './Deposits';
-// import Orders from './Orders';
-
-function Copyright() {
-  return (
-    <Typography variant="body2" color="textSecondary" align="center">
-      {"Copyright © "}
-      <Link color="inherit" href="https://github.com/ARKA-MVC">
-        Your Website
-      </Link>{" "}
-      {new Date().getFullYear()}
-      {"."}
-    </Typography>
-  );
-}
+import axios from "axios";
+import { useHistory } from "react-router-dom";
 
 const drawerWidth = 220;
 
@@ -128,6 +102,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
+  const history = useHistory();
   const [open, setOpen] = React.useState(true);
   const [openModal, setOpenModal] = React.useState(false);
 
@@ -141,9 +116,23 @@ export default function Dashboard() {
     setOpenModal(openModal ? false : true);
   };
 
+  const handleLogOut = () => {
+    axios
+      .post("/auth/logout", { withCredentials: true })
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          history.push("/sign-up");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   useEffect(() => {
     console.log(openModal);
-  }, [openModal])
+  }, [openModal]);
 
   return (
     <div className={classes.root}>
@@ -200,7 +189,8 @@ export default function Dashboard() {
         <Divider />
         <List>{mainListItems}</List>
         <Divider />
-        <List>{secondaryListItems}</List>
+        <List style={{ flexGrow: "1" }}>{secondaryListItems}</List>
+        <List onClick={handleLogOut}>{thirdListItems}</List>
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -208,8 +198,7 @@ export default function Dashboard() {
       <CreateTransModal
         open={openModal}
         handleModalAction={handleModalAction}
-      >
-      </CreateTransModal>
+      ></CreateTransModal>
     </div>
   );
 }

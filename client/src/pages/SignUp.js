@@ -13,8 +13,10 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import SignupSchema from "../schema/Auth";
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 function Copyright() {
   return (
@@ -57,23 +59,29 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignupSchema = yup.object().shape({
-  username: yup.string().required("Username is required"),
-  email: yup.string().required("Email is required").email("Email is invalid"),
-  password: yup.string().required("Password is required").min(6).max(20),
-  cpassword: yup
-    .string()
-    .oneOf([yup.ref("password"), null], "Password does not match"),
-});
-
 export default function SignUp() {
   const classes = useStyles();
+  const history = useHistory();
   const { register, handleSubmit, errors } = useForm({
     resolver: yupResolver(SignupSchema),
   });
 
   const onSubmit = (data) => {
+    delete data.cpassword;
+    delete data.license;
+    data.gender = 1;
     console.log(JSON.stringify(data));
+    axios
+      .post("/auth/create", data)
+      .then((res) => {
+        console.log(res);
+        if (res.status === 200) {
+          history.push("/")
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   return (
@@ -156,9 +164,19 @@ export default function SignUp() {
             </Grid>
             <Grid item xs={12}>
               <FormControlLabel
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
+                control={
+                  <Checkbox
+                    color="primary"
+                    name="license"
+                    value="checked"
+                    inputRef={register}
+                  />
+                }
+                label="I have read and accept the terms and conditions."
               />
+              {errors.license && (
+                <p className={classes.errors}>{errors.license.message}</p>
+              )}
             </Grid>
           </Grid>
           <Button
@@ -172,7 +190,7 @@ export default function SignUp() {
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="/sign-in" variant="body2">
                 Already have an account? Sign in
               </Link>
             </Grid>

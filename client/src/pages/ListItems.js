@@ -1,12 +1,13 @@
-import React from 'react';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
-import AssignmentIcon from '@material-ui/icons/Assignment';
+import React from "react";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListSubheader from "@material-ui/core/ListSubheader";
+import AccountBalanceWalletIcon from "@material-ui/icons/AccountBalanceWallet";
+import BarChartIcon from "@material-ui/icons/BarChart";
+import LayersIcon from "@material-ui/icons/Layers";
+import AssignmentIcon from "@material-ui/icons/Assignment";
+import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
 
 export const mainListItems = (
   <div>
@@ -44,13 +45,24 @@ export const secondaryListItems = (
       <ListItemIcon>
         <AssignmentIcon />
       </ListItemIcon>
-      <ListItemText primary="Last quarter" />
+      <ListItemText primary="Last month" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>
         <AssignmentIcon />
       </ListItemIcon>
-      <ListItemText primary="Year-end sale" />
+      <ListItemText primary="Last quarter" />
+    </ListItem>
+  </div>
+);
+
+export const thirdListItems = (
+  <div>
+    <ListItem button>
+      <ListItemIcon>
+        <PowerSettingsNewIcon />
+      </ListItemIcon>
+      <ListItemText primary="Log out" />
     </ListItem>
   </div>
 );

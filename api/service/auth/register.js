@@ -2,7 +2,11 @@ const pool = require('../../config/db.config.js');
 const registerService = {};
 
 registerService.createNewUser = (user) => {
-  const sql = `CALL procUserInsert("${user.name}", ${user.age}, "${user.email}")`;
+  console.log(user)
+  const sql = "SET @message ='';" +
+            `CALL ProInsertUser("${user.username}", "${user.email}", "${user.gender}", "${user.password}", @message);` +
+            "SELECT @message;"
+  console.log(sql)
   return new Promise ((resolve, reject) => {
     pool.query(sql, (err, results) => {
       if (err) {
@@ -14,8 +18,8 @@ registerService.createNewUser = (user) => {
 }
 
 //This is just a test function for chaining promise 
-registerService.findUser = (userName) => {
-  const sql = `SELECT * FROM User WHERE Name = "${userName}"`;
+registerService.findUserByEmail = (email) => {
+  const sql = `SELECT * FROM User WHERE email = "${email}"`;
   return new Promise ((resolve, reject) => {
     pool.query(sql, (err, results) => {
       if (err) {

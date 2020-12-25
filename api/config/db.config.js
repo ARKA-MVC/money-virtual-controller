@@ -12,7 +12,8 @@ const pool = mysql.createPool({
   host: dbConfig.HOST,
   user: dbConfig.USER,
   password: dbConfig.PASSWORD,
-  database: dbConfig.DBNAME
+  database: dbConfig.DBNAME,
+  multipleStatements: true
 });
 
 module.exports = pool;

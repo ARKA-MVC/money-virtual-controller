@@ -6,10 +6,17 @@ registerController.createNewUser = (req, res) => {
     .createNewUser(req.body)
     .then((results) => {
       console.log(results);
-      return registerService.findUser("namp");
+      return registerService.findUserByEmail(req.body.email);
     })
     .then((results) => {
-      console.log(results)
+      console.log(results);
+      user = results[0];
+      req.session.currentUser = {
+        id: user.id,
+        username: user.username,
+        email: user.email,
+      };
+      console.log(req.session.currentUser)
       res.status(200).json({
         results: results,
       });
