@@ -5,7 +5,7 @@ const dbConfig = {
   HOST: "localhost",
   USER: "root",
   PASSWORD: "root",
-  DBNAME: "mvc_db"
+  DBNAME: "MVC"
 };
 
 const pool = mysql.createPool({
