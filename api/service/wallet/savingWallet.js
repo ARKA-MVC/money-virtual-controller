@@ -22,12 +22,6 @@ savingWalletService.createNewWallet = (name, end_date, starting_amount, goal_amo
 
 savingWalletService.newTransaction = (note, amount, category_id, saving_id, trans_time, callback) =>{
     const sql = `CALL procCreateTransSavingWallet('${note}', ${amount}, ${category_id}, ${saving_id}, '${trans_time}')`;
-    console.log(note)
-    console.log(note)
-    console.log(note)
-    console.log(note)
-    console.log(note)
-    console.log(note)
 
     pool.query(sql, (err, results) => {
         if (!err) {
@@ -49,7 +43,22 @@ savingWalletService.statisticThisMonth = (saving_id) =>{
                 return reject(new Error("Something went wrong"))
             }
             if (Object.keys(results).length === 0){
-                reject(new Error("Something went wrong"))
+                reject(new Error("404 ERROR"))
+            }
+            resolve(results)
+        })
+    })
+}
+
+savingWalletService.statisticPast = (saving_id) =>{
+    const sql = `CALL procStatisticSavingPast(${saving_id})`;
+    return new Promise((resolve, reject) => {
+        pool.query(sql, (err, results)=>{
+            if(err){
+                return reject(new Error("Something went wrong"))
+            }
+            if (Object.keys(results).length === 0){
+                reject(new Error("404 ERROR"))
             }
             resolve(results)
         })
@@ -62,7 +71,7 @@ savingWalletService.getWallet = (saving_id) => {
         pool.query(sql, (err, results) => {
             if (err) {
                 console.log(err)
-                reject(new Error("Eo tim duoc thang nao het"))
+                reject(new Error("Không tìm được ví"))
             }
             if (Object.keys(results).length === 0){
                 reject(new Error("Không tìm được Id"))
@@ -78,10 +87,58 @@ savingWalletService.getCategory = (cat_type) => {
         pool.query(sql, (err, results) => {
             if (err) {
                 console.log(err)
-                reject(new Error("Lỗi"))
+                reject(new Error("Something went wrong"))
             }
             if (Object.keys(results).length === 0){
                 reject(new Error("Không tìm được Id"))
+            }
+            resolve(results)
+        })
+    })
+}
+
+savingWalletService.ListAllSavingTransThisMonth = (wallet_id) => {
+    const sql = `CALL procAllTransactionSavingWallet(${wallet_id})`;
+    return new Promise ((resolve, reject) => {
+        pool.query(sql, (err, results) => {
+            if (err) {
+                console.log(err)
+                reject(new Error("Something went wrong"))
+            }
+            if (Object.keys(results).length === 0){
+                reject(new Error("Không tìm được Id"))
+            }
+            resolve(results)
+        })
+    })
+}
+
+savingWalletService.ListAllSavingTransPast = (wallet_id) => {
+    const sql = `CALL procAllTransSavingPast(${wallet_id})`;
+    return new Promise ((resolve, reject) => {
+        pool.query(sql, (err, results) => {
+            if (err) {
+                console.log(err)
+                reject(new Error("Something went wrong"))
+            }
+            if (Object.keys(results).length === 0){
+                reject(new Error("Không tìm được Id"))
+            }
+            resolve(results)
+        })
+    })
+}
+
+savingWalletService.TransactionByCategory = (cat_type, w_id) => {
+    const sql = `CALL procSavingTransByCat(${cat_type}, ${w_id})`;
+    return new Promise ((resolve, reject) => {
+        pool.query(sql, (err, results) => {
+            if (err) {
+                console.log(err)
+                reject(new Error("Something went wrong"))
+            }
+            if (Object.keys(results).length === 0){
+                reject(new Error("Không tìm được id"))
             }
             resolve(results)
         })
