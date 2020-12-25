@@ -6,5 +6,9 @@ const savingWalletController = require('../controller/wallet/savingWallet.js');
 walletRouter.get('/saving/find/:wallet_id', savingWalletController.getWallet)
 walletRouter.post('/saving/create/', savingWalletController.createNewWallet);
 walletRouter.post('/saving/create/transaction/', savingWalletController.newTransaction)
-walletRouter.get('/saving/:wallet_id', savingWalletController.statisticThisMonth)
+walletRouter.get('/saving/statistic_now/:wallet_id', savingWalletController.statisticThisMonth)
+walletRouter.get('/saving/statistic_past/:wallet_id', savingWalletController.statisticPast)
+walletRouter.get('/saving/all_transactions/:wallet_id', savingWalletController.AllSavingTransThisMonth)
+walletRouter.get('/saving/all_transactions_past/:wallet_id', savingWalletController.AllSavingPast)
+walletRouter.get('/saving/trans_by_type/:cat_type/:wallet_id', savingWalletController.TransactionByType)
 module.exports = walletRouter;
