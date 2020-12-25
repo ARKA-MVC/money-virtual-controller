@@ -1,6 +1,7 @@
 const savingWalletService = require('../../service/wallet/savingWallet.js');
 const savingWalletController = {};
 
+//Hàm thực hiện tạo ví tiết kiệm
 savingWalletController.createNewWallet = (req, res) => {
     const body = req.body;
     savingWalletService.createNewWallet(body.name, body.end_date, body.starting_amount, body.goal_amount, body.user_id, (err, results) => {
@@ -16,6 +17,7 @@ savingWalletController.createNewWallet = (req, res) => {
     });
 };
 
+//Tạo ra các giao dịch trong ví tiết kiệm
 savingWalletController.newTransaction = (req, res) => {
     const body = req.body;
     savingWalletService.newTransaction(body.note, body.amount, body.category_id, body.saving_id, body.trans_time, (err, results) => {
@@ -31,28 +33,51 @@ savingWalletController.newTransaction = (req, res) => {
     })
 }
 
+//Thống kê các giao dịch trong tháng này của ví tiết kiệm
 savingWalletController.statisticThisMonth = (req, res) => {
     savingWalletService
         .getWallet(req.params.wallet_id)
-        .getCategory(req)
         .then((results) => {
             console.log(results)
             return savingWalletService.statisticThisMonth(results[0].id);
         })
-        .then((results) =>{
+        .then((results) => {
             console.log(results)
             res.status(200).json({
-                resutls:results,
+                resutls: results,
             })
         })
-        .catch((err)=>{
+        .catch((err) => {
             res.status(500).json({
                 message: err.message,
             })
         })
 }
 
-savingWalletController.getWallet = (req, res) =>{
+//Thống kê các giao dịch trong quá khứ của ví tiết kiệm
+savingWalletController.statisticPast = (req, res) => {
+    savingWalletService
+        .getWallet(req.params.wallet_id)
+        .then((results) => {
+            console.log(results)
+            return savingWalletService.statisticPast(results[0].id);
+        })
+        .then((results) => {
+            console.log(results)
+            res.status(200).json({
+                resutls: results,
+            })
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: err.message,
+            })
+        })
+}
+
+
+//Trả về id của ví tiết kiệm
+savingWalletController.getWallet = (req, res) => {
     savingWalletService
         .getWallet(req.params.wallet_id)
         .then((results) => {
@@ -70,7 +95,46 @@ savingWalletController.getWallet = (req, res) =>{
         });
 }
 
-savingWalletController
+//Liệt kê tất cả giao dịch của ví tiết kiệm trong tháng này
+savingWalletController.AllSavingTransThisMonth = (req, res)=>{
+    savingWalletService
+        .getWallet(req.params.wallet_id)
+        .then((results) => {
+            console.log(results)
+            return savingWalletService.ListAllSavingTransThisMonth(results[0].id);
+        })
+        .then((results) => {
+            console.log(results)
+            res.status(200).json({
+                resutls: results,
+            })
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: err.message,
+            })
+        })
+}
 
+//Liệt kê các giao dịch của ví tiết kiệm trong quá khứ
+savingWalletController.AllSavingPast = (req, res)=>{
+    savingWalletService
+        .getWallet(req.params.wallet_id)
+        .then((results) => {
+            console.log(results)
+            return savingWalletService.ListAllSavingTransPast(results[0].id);
+        })
+        .then((results) => {
+            console.log(results)
+            res.status(200).json({
+                resutls: results,
+            })
+        })
+        .catch((err) => {
+            res.status(500).json({
+                message: err.message,
+            })
+        })
+}
 
 module.exports = savingWalletController;
