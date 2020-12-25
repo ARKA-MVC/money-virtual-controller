@@ -1,16 +1,26 @@
+import { ThemeProvider } from '@material-ui/core';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import './index.css';
+import Dashboard from './pages/Dashboard';
+import SignIn from './pages/SignIn';
+import SignUp from './pages/SignUp'
+// import LoginPage from './pages/LoginPage';
 import reportWebVitals from './reportWebVitals';
+import theme from './theme/theme';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <Switch>
-        {/* <Route exact={true} path="/" component={}></Route> */}
-      </Switch>
-    </BrowserRouter>
+    <ThemeProvider theme={theme}>
+      <BrowserRouter>
+        <Switch>
+          <Route exact={true} path="/" component={Dashboard}></Route>
+          <Route path="/sign-in" component={SignIn}></Route>
+          <Route path="/sign-up" component={SignUp}></Route>
+        </Switch>
+      </BrowserRouter>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

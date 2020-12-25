@@ -4,8 +4,8 @@ const mysql = require("mysql");
 const dbConfig = {
   HOST: "localhost",
   USER: "root",
-  PASSWORD: "1",
-  DBNAME: "mvc_doan"
+  PASSWORD: "root",
+  DBNAME: "MVC"
 };
 
 const pool = mysql.createPool({
