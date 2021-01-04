@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -12,11 +12,18 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import AddIcon from "@material-ui/icons/Add";
-import { mainListItems, secondaryListItems, thirdListItems } from "./ListItems";
+import {
+  mainListItems,
+  secondaryListItems,
+  thirdListItems,
+} from "../layouts/ListItems";
 import { Button } from "@material-ui/core";
 import CreateTransModal from "../components/Modal/CreateTransModal";
-import axios from "axios";
-import { useHistory } from "react-router-dom";
+import { WalletContext } from "../contexts/WalletContext";
+import { UserLogout } from "../utils/Auth";
+import { UserContext } from "../contexts/UserContext";
+import { Redirect, Route, Switch } from "react-router-dom";
+import Wallets from "../layouts/Wallets";
 
 const drawerWidth = 220;
 
@@ -102,9 +109,11 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-  const history = useHistory();
+  const { wallets, addWallet, removeWallet } = useContext(WalletContext);
+  const { user, setUser } = useContext(UserContext);
   const [open, setOpen] = React.useState(true);
   const [openModal, setOpenModal] = React.useState(false);
+  console.log(user);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -117,17 +126,8 @@ export default function Dashboard() {
   };
 
   const handleLogOut = () => {
-    axios
-      .post("/auth/logout", { withCredentials: true })
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          history.push("/sign-up");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    setUser("");
+    UserLogout();
   };
 
   useEffect(() => {
@@ -136,69 +136,89 @@ export default function Dashboard() {
 
   return (
     <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="absolute"
-        className={clsx(classes.appBar, open && classes.appBarShift)}
-      >
-        <Toolbar className={classes.toolbar}>
-          <IconButton
-            edge="start"
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            className={clsx(
-              classes.menuButton,
-              open && classes.menuButtonHidden
-            )}
+      {user !== "" && user !== undefined ? (
+        <>
+          <CssBaseline />
+          <AppBar
+            position="absolute"
+            className={clsx(classes.appBar, open && classes.appBarShift)}
           >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            component="h1"
-            variant="h6"
-            color="primary"
-            noWrap
-            className={classes.title}
-          >
-            Dashboard
-          </Typography>
+            <Toolbar className={classes.toolbar}>
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                className={clsx(
+                  classes.menuButton,
+                  open && classes.menuButtonHidden
+                )}
+              >
+                <MenuIcon />
+              </IconButton>
+              <Typography
+                component="h1"
+                variant="h6"
+                color="primary"
+                noWrap
+                className={classes.title}
+              >
+                Dashboard
+              </Typography>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleModalAction}
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleModalAction}
+              >
+                <AddIcon></AddIcon>
+                Add Transaction
+              </Button>
+            </Toolbar>
+          </AppBar>
+
+          <Drawer
+            variant="permanent"
+            classes={{
+              paper: clsx(
+                classes.drawerPaper,
+                !open && classes.drawerPaperClose
+              ),
+            }}
+            open={open}
           >
-            <AddIcon></AddIcon>
-            Add Transaction
-          </Button>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        variant="permanent"
-        classes={{
-          paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-        }}
-        open={open}
-      >
-        <div className={classes.toolbarIcon}>
-          <IconButton onClick={handleDrawerClose}>
-            <ChevronLeftIcon />
-          </IconButton>
-        </div>
-        <Divider />
-        <List>{mainListItems}</List>
-        <Divider />
-        <List style={{ flexGrow: "1" }}>{secondaryListItems}</List>
-        <List onClick={handleLogOut}>{thirdListItems}</List>
-      </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-      </main>
-      <CreateTransModal
-        open={openModal}
-        handleModalAction={handleModalAction}
-      ></CreateTransModal>
+            <div className={classes.toolbarIcon}>
+              <IconButton onClick={handleDrawerClose}>
+                <ChevronLeftIcon />
+              </IconButton>
+            </div>
+            <Divider />
+            <List>{mainListItems}</List>
+            <Divider />
+            <List
+              style={{
+                flexGrow: "1",
+              }}
+            >
+              {secondaryListItems}
+            </List>
+            <List onClick={handleLogOut}>{thirdListItems}</List>
+          </Drawer>
+          <main className={classes.content}>
+            <div className={classes.appBarSpacer} />
+            <Switch>
+              <Route path="/my-wallets" component={Wallets}></Route>
+            </Switch>
+          </main>
+
+          <CreateTransModal
+            open={openModal}
+            handleModalAction={handleModalAction}
+          ></CreateTransModal>
+        </>
+      ) : (
+        <Redirect to="/sign-in"></Redirect>
+      )}
     </div>
   );
 }

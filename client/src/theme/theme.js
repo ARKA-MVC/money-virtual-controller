@@ -18,6 +18,13 @@ const theme = createMuiTheme({
         },
       },
     },
+    MuiFilledInput: {
+      input: {
+        "&:-webkit-autofill": {
+          WebkitBoxShadow: "0 0 0 1000px #535353 inset",
+        },
+      },
+    },
   },
 });
 

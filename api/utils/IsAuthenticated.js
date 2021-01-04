@@ -2,7 +2,7 @@ const IsAuthenticated = (req, res, next) => {
   if (req.isAuthenticated()) {
     next();
   } else {
-    next(new Error(401));
+    next(new Error("not authenticated"));
   }
 };
 

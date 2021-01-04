@@ -8,14 +8,22 @@ import BarChartIcon from "@material-ui/icons/BarChart";
 import LayersIcon from "@material-ui/icons/Layers";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew';
+import MonetizationOnIcon from '@material-ui/icons/MonetizationOn';
+import { Link } from "react-router-dom";
 
 export const mainListItems = (
   <div>
     <ListItem button>
       <ListItemIcon>
-        <AccountBalanceWalletIcon />
+        <MonetizationOnIcon />
       </ListItemIcon>
       <ListItemText primary="Transaction" />
+    </ListItem>
+    <ListItem button component={Link} to={"/my-wallets"}>
+      <ListItemIcon>
+        <AccountBalanceWalletIcon />
+      </ListItemIcon>
+      <ListItemText primary="Wallets" />
     </ListItem>
     <ListItem button>
       <ListItemIcon>

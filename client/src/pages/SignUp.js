@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -14,15 +14,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import SignupSchema from "../schema/Auth";
-import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import axios from "axios";
+import { useHistory } from "react-router-dom";
+import { FormControl, FormLabel, Radio, RadioGroup } from "@material-ui/core";
+import DisabledButton from "../components/Button /DisabledButton";
+import { RegisterSchema } from "../schema/Auth";
+import { UserContext } from "../contexts/UserContext";
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {"Copyright © "}
-      <Link color="inherit" href="https://material-ui.com/">
+      <Link color="inherit" href="https://github.com/ARKA-MVC">
         Your Website
       </Link>{" "}
       {new Date().getFullYear()}
@@ -54,33 +57,70 @@ const useStyles = makeStyles((theme) => ({
       WebkitBoxShadow: "0 0 0 1000px #303030 inset",
     },
   },
+  radioGroup: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    "& $label": {
+      flexGrow: "1",
+      marginLeft: "14px",
+    },
+    "& $radio": {
+      flexGrow: "2",
+      justifyContent: "space-evenly",
+    },
+  },
   errors: {
     color: "#ff9600",
+    marginLeft: "14px",
+  },
+  label: {},
+  radio: {},
+  otherErrors: {
+    width: "100%",
+    marginTop: "20px",
+    borderWidth: "2px",
+    paddingTop: "15px",
+    paddingBottom: "15px",
+    borderColor: "#FF9600",
+    textTransform: "none",
   },
 }));
 
 export default function SignUp() {
   const classes = useStyles();
   const history = useHistory();
+  const [emailExisted, setEmailExisted] = useState(false);
+  const [usernameExisted, setUsernameExisted] = useState(false);
+  const { setUser } = useContext(UserContext);
+  const [otherErr, setOtherErr] = useState("");
   const { register, handleSubmit, errors } = useForm({
-    resolver: yupResolver(SignupSchema),
+    resolver: yupResolver(RegisterSchema),
   });
 
   const onSubmit = (data) => {
+    console.log(data);
     delete data.cpassword;
     delete data.license;
-    data.gender = 1;
     console.log(JSON.stringify(data));
     axios
       .post("/auth/create", data)
       .then((res) => {
-        console.log(res);
+        setUser(res.data.results);
         if (res.status === 200) {
-          history.push("/")
+          history.push("/");
         }
       })
       .catch((err) => {
-        console.log(err);
+        const message = err.response.data.message;
+        if (message === "Email Used") {
+          setEmailExisted(true);
+        } else if (message === "Username Used") {
+          setUsernameExisted(true);
+        } else {
+          setOtherErr(message);
+        }
+        console.log(err.response.data.message);
       });
   };
 
@@ -94,10 +134,18 @@ export default function SignUp() {
         <Typography component="h1" variant="h5">
           Sign up
         </Typography>
+        {otherErr !== "" ? (
+          <DisabledButton content={otherErr}></DisabledButton>
+        ) : null}
         <form
           className={classes.form}
           noValidate
           onSubmit={handleSubmit(onSubmit)}
+          onFocus={() => {
+            setEmailExisted(false);
+            setUsernameExisted(false);
+            setOtherErr("");
+          }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
@@ -114,6 +162,34 @@ export default function SignUp() {
               {errors.username && (
                 <p className={classes.errors}>{errors.username.message}</p>
               )}
+              {usernameExisted ? (
+                <p className={classes.errors}>This username has been used</p>
+              ) : null}
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl component="fieldset" className={classes.radioGroup}>
+                <FormLabel component="span" className={classes.label}>
+                  Gender:
+                </FormLabel>
+                <RadioGroup
+                  aria-label="gender"
+                  name="gender"
+                  row
+                  className={classes.radio}
+                  defaultValue="0"
+                >
+                  <FormControlLabel
+                    value="0"
+                    control={<Radio inputRef={register} />}
+                    label="Female"
+                  />
+                  <FormControlLabel
+                    value="1"
+                    control={<Radio inputRef={register} />}
+                    label="Male"
+                  />
+                </RadioGroup>
+              </FormControl>
             </Grid>
             <Grid item xs={12}>
               <TextField
@@ -129,6 +205,9 @@ export default function SignUp() {
               {errors.email && (
                 <p className={classes.errors}>{errors.email.message}</p>
               )}
+              {emailExisted ? (
+                <p className={classes.errors}>This email has been used</p>
+              ) : null}
             </Grid>
             <Grid item xs={12}>
               <TextField

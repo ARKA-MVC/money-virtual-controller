@@ -3,28 +3,33 @@ const registerController = {};
 
 registerController.createNewUser = (req, res) => {
   registerService
-    .createNewUser(req.body)
+    .findExistedUsername(req.body.username)
+    .then(results => {
+      return registerService.findExistedEmail(req.body.email)
+    })
+    .then(results => {
+      return registerService.createNewUser(req.body)
+    })
     .then((results) => {
-      console.log(results);
       return registerService.findUserByEmail(req.body.email);
     })
     .then((results) => {
-      console.log(results);
-      user = results[0];
+      const user = results[0][0];
       req.session.currentUser = {
         id: user.id,
         username: user.username,
         email: user.email,
+        password: user.password
       };
       console.log(req.session.currentUser)
       res.status(200).json({
-        results: results,
+        results: results[0][0],
       });
     })
     .catch((err) => {
-      console.log(err);
+      console.log(err.message);
       res.status(500).json({
-        message: err,
+        message: err.message,
       });
     });
 };
