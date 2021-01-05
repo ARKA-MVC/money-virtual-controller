@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -24,6 +24,7 @@ import { UserLogout } from "../utils/Auth";
 import { UserContext } from "../contexts/UserContext";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Wallets from "../layouts/Wallets";
+import WalletSelect from "../components/Select/WalletSelect";
 
 const drawerWidth = 220;
 
@@ -109,11 +110,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-  const { wallets, addWallet, removeWallet } = useContext(WalletContext);
+  const { wallets, currentWallet, setCurrentWallet } = useContext(
+    WalletContext
+  );
   const { user, setUser } = useContext(UserContext);
   const [open, setOpen] = React.useState(true);
   const [openModal, setOpenModal] = React.useState(false);
   console.log(user);
+  console.log(wallets);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -126,17 +130,13 @@ export default function Dashboard() {
   };
 
   const handleLogOut = () => {
-    setUser("");
+    setUser(null);
     UserLogout();
   };
 
-  useEffect(() => {
-    console.log(openModal);
-  }, [openModal]);
-
   return (
     <div className={classes.root}>
-      {user !== "" && user !== undefined ? (
+      {user !== undefined ? (
         <>
           <CssBaseline />
           <AppBar
@@ -165,6 +165,26 @@ export default function Dashboard() {
               >
                 Dashboard
               </Typography>
+              <div
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  marginRight: "20px",
+                }}
+              >
+                <Typography
+                  component="span"
+                  variant="body1"
+                  color="primary"
+                  style={{ marginRight: "20px" }}
+                >
+                  Choose your wallet
+                </Typography>
+                <WalletSelect
+                  state={currentWallet}
+                  setState={setCurrentWallet}
+                ></WalletSelect>
+              </div>
 
               <Button
                 variant="contained"

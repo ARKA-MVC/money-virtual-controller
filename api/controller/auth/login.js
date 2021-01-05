@@ -40,10 +40,11 @@ loginController.isLogin = (req, res) => {
           message: err.message,
         });
       });
+  } else {
+    res.status(200).json({
+      results: undefined,
+    });
   }
-  res.status(200).json({
-    results: undefined,
-  });
 };
 
 module.exports = loginController;

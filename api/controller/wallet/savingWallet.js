@@ -7,11 +7,11 @@ savingWalletController.createNewWallet = (req, res) => {
     savingWalletService.createNewWallet(body.name, body.end_date, body.starting_amount, body.goal_amount, body.user_id, (err, results) => {
         if (err) {
             res.status(500).json({
-                message: "Cannot create user"
+                message: "Cannot create saving wallet"
             })
         } else {
             res.status(200).json({
-                message: "Created new user successfully!"
+                message: "Created new saving wallet successfully!"
             })
         }
     });

@@ -20,7 +20,44 @@ walletController.createNewWalletByType = (req, res) => {
           message: err.message,
         });
       });
+  } else {
+    savingWalletService
+      .createNewWallet(
+        wallet.name,
+        wallet.endingDate,
+        parseFloat(wallet.startingAmount),
+        parseFloat(wallet.goalAmount),
+        parseInt(userId)
+      )
+      .then((results) => {
+        res.status(200).json({
+          message: "success",
+        });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: err.message,
+        });
+      });
   }
+};
+
+walletController.getAllWallets = (req, res) => {
+  const userId = req.session.currentUser.id;
+  Promise.all([
+    dailyWalletService.getAllWallets(parseInt(userId)),
+    savingWalletService.getAllWallets(parseInt(userId)),
+  ])
+    .then((results) => {
+      res.status(200).json({
+        data: results,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
 };
 
 module.exports = walletController;

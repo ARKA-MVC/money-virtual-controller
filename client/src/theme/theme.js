@@ -10,6 +10,22 @@ const theme = createMuiTheme({
       main: "#fff",
     },
   },
+  typography: {
+    fontFamily: [
+      'Quicksand',
+      'Montserrat',
+      '-apple-system',
+      'BlinkMacSystemFont',
+      '"Segoe UI"',
+      'Roboto',
+      '"Helvetica Neue"',
+      'Arial',
+      'sans-serif',
+      '"Apple Color Emoji"',
+      '"Segoe UI Emoji"',
+      '"Segoe UI Symbol"',
+    ].join(','),
+  },
   overrides: {
     MuiOutlinedInput: {
       input: {

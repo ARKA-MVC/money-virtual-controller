@@ -1,5 +1,5 @@
 import { ThemeProvider } from "@material-ui/core";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { UserContext, UserContextProvider } from "./contexts/UserContext";
 import WalletContextProvider from "./contexts/WalletContext";

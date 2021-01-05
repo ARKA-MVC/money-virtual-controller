@@ -4,7 +4,7 @@ import { IsUserLogin } from "../utils/Auth";
 export const UserContext = React.createContext();
 
 export const UserContextProvider = (props) => {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
   const getCurrentUser = () => {
     IsUserLogin.then((res) => {
       setUser(res.data.results);
