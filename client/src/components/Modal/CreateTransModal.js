@@ -1,5 +1,7 @@
 import { makeStyles, Modal } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import CreateTransForm from "../Form/CreateTransForm";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -12,11 +14,52 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid #000",
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
+    minWidth: "800px",
   },
 }));
 
 const CreateTransModal = (props) => {
   const classes = useStyles();
+  const [transaction, setTransaction] = useState({
+    note: "",
+    amount: "",
+    categoryId: "",
+    toTransaction: "",
+    walletId: "",
+    transType: "Income",
+    date: "",
+  });
+  const [category, setCategory] = useState({
+    income: [],
+    expense: [],
+    debtLoan: [],
+  });
+
+  useEffect(() => {
+    if (!props.open) return;
+    axios
+      .get("/category/getall")
+      .then((res) => {
+        const income = [];
+        const expense = [];
+        const debtLoan = [];
+        res.data.data.forEach((category) => {
+          if (category.type === "Pay") {
+            expense.push(category);
+          } else if (category.type === "Collect") {
+            income.push(category);
+          } else {
+            if (category.type !== "Transfer") {
+              debtLoan.push(category);
+            }
+          }
+        });
+        setCategory({ income: income, expense: expense, debtLoan: debtLoan });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, [props.open]);
   return (
     <>
       <Modal
@@ -24,12 +67,13 @@ const CreateTransModal = (props) => {
         onClose={props.handleModalAction}
         className={classes.modal}
       >
-        <div className={classes.paper}>
-          <h2 id="simple-modal-title">Text in a modal</h2>
-          <p id="simple-modal-description">
-            Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-          </p>
-        </div>
+        <CreateTransForm
+          category={category}
+          paper={classes.paper}
+          transaction={transaction}
+          setTransaction={setTransaction}
+          handleModalAction={props.handleModalAction}
+        ></CreateTransForm>
       </Modal>
     </>
   );

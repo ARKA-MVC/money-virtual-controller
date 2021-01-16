@@ -110,14 +110,14 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-  const { wallets, currentWallet, setCurrentWallet } = useContext(
+  const { currentWallet, setCurrentWallet } = useContext(
     WalletContext
   );
   const { user, setUser } = useContext(UserContext);
   const [open, setOpen] = React.useState(true);
   const [openModal, setOpenModal] = React.useState(false);
-  console.log(user);
-  console.log(wallets);
+  // console.log(user);
+  // console.log(wallets);
 
   const handleDrawerOpen = () => {
     setOpen(true);

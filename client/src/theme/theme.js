@@ -12,19 +12,19 @@ const theme = createMuiTheme({
   },
   typography: {
     fontFamily: [
-      'Quicksand',
-      'Montserrat',
-      '-apple-system',
-      'BlinkMacSystemFont',
+      "Quicksand",
+      "Montserrat",
+      "-apple-system",
+      "BlinkMacSystemFont",
       '"Segoe UI"',
-      'Roboto',
+      "Roboto",
       '"Helvetica Neue"',
-      'Arial',
-      'sans-serif',
+      "Arial",
+      "sans-serif",
       '"Apple Color Emoji"',
       '"Segoe UI Emoji"',
       '"Segoe UI Symbol"',
-    ].join(','),
+    ].join(","),
   },
   overrides: {
     MuiOutlinedInput: {
@@ -38,6 +38,13 @@ const theme = createMuiTheme({
       input: {
         "&:-webkit-autofill": {
           WebkitBoxShadow: "0 0 0 1000px #535353 inset",
+        },
+      },
+    },
+    MuiContainer: {
+      maxWidthXs: {
+        "@media (min-width: 0px)": {
+          maxWidth: "fit-content",
         },
       },
     },

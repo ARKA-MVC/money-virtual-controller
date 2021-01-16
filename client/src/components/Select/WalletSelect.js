@@ -1,6 +1,7 @@
 import {
   Avatar,
   FormControl,
+  InputLabel,
   makeStyles,
   MenuItem,
   Select,
@@ -32,6 +33,13 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: "15px",
     marginBottom: "0px",
   },
+  middleDivCompactSize: {
+    display: "flex",
+    justifyContent: "space-between",
+    flexGrow: "1",
+    marginLeft: "15px",
+    marginBottom: "0px",
+  },
   lastDiv: {
     justifyItems: "end",
   },
@@ -47,8 +55,6 @@ const WalletSelect = (props) => {
     console.log(event.target.value);
     props.setState(event.target.value);
   };
-  console.log(props.state);
-  console.log(typeof props.state);
   const renderListWallets = () => {
     let listWallets = [];
     for (const wallet in wallets) {
@@ -68,6 +74,9 @@ const WalletSelect = (props) => {
                 <div>
                   <Avatar
                     alt="daily-logo"
+                    style={
+                      props.compactSize ? { height: "19px", width: "19px" } : {}
+                    }
                     src={
                       type === "daily"
                         ? "https://st4.depositphotos.com/6809168/27246/v/950/depositphotos_272464266-stock-illustration-coin-with-wings-fly-dollar.jpg"
@@ -75,19 +84,21 @@ const WalletSelect = (props) => {
                     }
                   ></Avatar>
                 </div>
-                {type === "saving" ? (
-                  <div className={classes.middleDiv}>
-                    <div className={classes.walletName}>{wallet.name}</div>
+
+                <div
+                  className={
+                    props.compactSize
+                      ? classes.middleDivCompactSize
+                      : classes.middleDiv
+                  }
+                >
+                  <div className={classes.walletName}>{wallet.name}</div>
+                  {type === "saving" ? (
                     <div>{currencyFormat.format(wallet.starting_amount)}</div>
-                  </div>
-                ) : (
-                  <>
-                    <div className={classes.middleDiv}>
-                      <div className={classes.walletName}>{wallet.name}</div>
-                      <div>{currencyFormat.format(wallet.balance)}</div>
-                    </div>
-                  </>
-                )}
+                  ) : (
+                    <div>{currencyFormat.format(wallet.balance)}</div>
+                  )}
+                </div>
               </div>
             </MenuItem>
           );
@@ -99,13 +110,32 @@ const WalletSelect = (props) => {
     return listWallets;
   };
   return (
-    <FormControl className={classes.formInput}>
+    <FormControl
+      className={classes.formInput}
+      fullWidth={props.fullWidth}
+      variant={props.variant || "standard"}
+      required={props.required ? true : false}
+    >
+      {props.withLabel ? (
+        <InputLabel id="wallet-label">Wallet</InputLabel>
+      ) : null}
       <Select
-        autoWidth={true}
+        labelId="wallet-label"
+        label="Wallet"
+        fullWidth
         value={props.state}
         onChange={handleSelectWallet}
+        MenuProps={{
+          getContentAnchorEl: null,
+          PaperProps: {
+            style: {
+              maxHeight: 48 * 7.5,
+              marginTop: "-5px"
+            },
+          }
+        }}
       >
-        <MenuItem value={"all"}>All Wallets</MenuItem>
+        {!props.noAll ? <MenuItem value={"all"}>All Wallets</MenuItem> : null}
         {renderListWallets()}
       </Select>
     </FormControl>
