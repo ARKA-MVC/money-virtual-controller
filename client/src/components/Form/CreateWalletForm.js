@@ -194,11 +194,11 @@ const CreateWalletForm = React.forwardRef((props, ref) => {
                 className={classes.margin}
                 variant="filled"
               >
-                <InputLabel htmlFor="filled-adornment-glBalance">
+                <InputLabel htmlFor="filled-adornment-eDate">
                   Ending Date:
                 </InputLabel>
                 <FilledInput
-                  id="filled-adornment-glBalance"
+                  id="filled-adornment-eDate"
                   type="date"
                   required
                   name="endingDate"

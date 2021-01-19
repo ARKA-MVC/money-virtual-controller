@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Avatar, Card, CardContent, makeStyles } from "@material-ui/core";
 import { DateDiffDaysFromToday } from "../../utils/Time";
 import { currencyFormat } from "../../utils/StringFormat";
+import axios from "axios";
+import { WalletContext } from "../../contexts/WalletContext";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -17,13 +19,34 @@ const useStyles = makeStyles((theme) => ({
   },
   lastDiv: {
     justifyItems: "end",
-    textAlign: "right"
+    textAlign: "right",
   },
 }));
 const WalletCard = (props) => {
   const classes = useStyles();
+  const { reloadWallets } = useContext(WalletContext);
+  const deleteWallet = (id, type) => {
+    axios
+      .post("/wallet/common/delete", { id: id, type: type })
+      .then((res) => {
+        reloadWallets();
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  };
   return (
-    <Card className={classes.card} data-id={props.id} data-type={props.type}>
+    <Card
+      className={classes.card}
+      data-id={props.id}
+      data-type={props.type}
+      draggable
+      onDragEnd={(e) => {
+        const id = e.target.getAttribute("data-id");
+        const type = e.target.getAttribute("data-type");
+        deleteWallet(id, type);
+      }}
+    >
       <CardContent>
         <Avatar
           alt="daily-logo"

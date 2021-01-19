@@ -1,6 +1,8 @@
 const savingWalletService = require("../../service/wallet/savingWallet.js");
 const dailyWalletService = require("../../service/wallet/dailyWallet");
 const walletsService = require("../../service/wallet/wallets.js");
+const dailyWalletController = require("./dailyWallet.js");
+const savingWalletController = require("./savingWallet.js");
 const walletController = {};
 
 walletController.createNewWalletByType = (req, res) => {
@@ -75,6 +77,15 @@ walletController.getAllTransByTimeRange = (req, res) => {
         message: err.message,
       });
     });
+};
+
+walletController.deleteWalletByType = (req, res) => {
+  const type = req.body.type;
+  if (type === "daily") {
+    dailyWalletController.deleteWallet(req, res);
+  } else {
+    savingWalletController.deleteWallet(req, res);
+  }
 };
 
 module.exports = walletController;

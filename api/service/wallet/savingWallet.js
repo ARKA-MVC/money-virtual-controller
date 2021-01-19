@@ -163,4 +163,16 @@ savingWalletService.TransactionByCategory = (cat_type, w_id) => {
   });
 };
 
+savingWalletService.deleteWallet = (id) => {
+  const sql = `CALL procSavingWalletDelete(${id})`;
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      if (err) {
+        reject(new Error("Cannot delete wallet"));
+      }
+      resolve("Success");
+    });
+  });
+};
+
 module.exports = savingWalletService;

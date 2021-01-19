@@ -6,6 +6,7 @@ const walletController = require("../controller/wallet/wallet.js");
 
 walletRouter.post("/common/create", walletController.createNewWalletByType);
 walletRouter.get("/common/getall", walletController.getAllWallets);
+walletRouter.post("/common/delete", walletController.deleteWalletByType);
 walletRouter.get("/saving/find/:wallet_id", savingWalletController.getWallet);
 walletRouter.post("/saving/create/", savingWalletController.createNewWallet);
 walletRouter.post(

@@ -48,4 +48,16 @@ dailyWalletService.getAllTransByTimeRange = (wallet, from, to) => {
   });
 };
 
+dailyWalletService.deleteWallet = (id) => {
+  const sql = `SET @message="";CALL procDailyWalletDelete(${id}, @message)`;
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      if (err) {
+        reject(new Error("Cannot delete wallet"));
+      }
+      resolve("Success");
+    });
+  });
+};
+
 module.exports = dailyWalletService;
