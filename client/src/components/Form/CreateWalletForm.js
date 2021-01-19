@@ -70,7 +70,7 @@ const CreateWalletForm = React.forwardRef((props, ref) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" style={{maxWidth: "687px"}}>
       <CssBaseline />
       <div className={props.classProps}>
         <Typography component="h1" variant="h5" className={classes.title}>

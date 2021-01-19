@@ -26,6 +26,7 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import Wallets from "../layouts/Wallets";
 import WalletSelect from "../components/Select/WalletSelect";
 import Transactions from "../layouts/Transactions";
+import Reports from "../layouts/Reports";
 
 const drawerWidth = 220;
 
@@ -228,6 +229,7 @@ export default function Dashboard() {
             <Switch>
               <Route path="/my-wallets" component={Wallets}></Route>
               <Route path="/transactions" component={Transactions}></Route>
+              <Route path="/reports" component={Reports}></Route>
             </Switch>
           </main>
 

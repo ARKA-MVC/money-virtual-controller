@@ -161,7 +161,7 @@ const CreateTransForm = React.forwardRef((props, ref) => {
   };
 
   return (
-    <Container component="main" maxWidth="xs">
+    <Container component="main" maxWidth="xs" style={{ maxWidth: "800px" }}>
       <CssBaseline />
       <div className={props.paper}>
         <Typography component="h1" variant="h5" style={{ marginTop: "10px" }}>
