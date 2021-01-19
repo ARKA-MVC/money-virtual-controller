@@ -16,7 +16,7 @@ import {
   mainListItems,
   secondaryListItems,
   thirdListItems,
-} from "../layouts/ListItems";
+} from "../components/List/ListItems";
 import { Button } from "@material-ui/core";
 import CreateTransModal from "../components/Modal/CreateTransModal";
 import { WalletContext } from "../contexts/WalletContext";
@@ -25,6 +25,7 @@ import { UserContext } from "../contexts/UserContext";
 import { Redirect, Route, Switch } from "react-router-dom";
 import Wallets from "../layouts/Wallets";
 import WalletSelect from "../components/Select/WalletSelect";
+import Transactions from "../layouts/Transactions";
 
 const drawerWidth = 220;
 
@@ -110,9 +111,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Dashboard() {
   const classes = useStyles();
-  const { currentWallet, setCurrentWallet } = useContext(
-    WalletContext
-  );
+  const { currentWallet, setCurrentWallet } = useContext(WalletContext);
   const { user, setUser } = useContext(UserContext);
   const [open, setOpen] = React.useState(true);
   const [openModal, setOpenModal] = React.useState(false);
@@ -228,6 +227,7 @@ export default function Dashboard() {
             <div className={classes.appBarSpacer} />
             <Switch>
               <Route path="/my-wallets" component={Wallets}></Route>
+              <Route path="/transactions" component={Transactions}></Route>
             </Switch>
           </main>
 

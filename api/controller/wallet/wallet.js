@@ -1,5 +1,6 @@
 const savingWalletService = require("../../service/wallet/savingWallet.js");
 const dailyWalletService = require("../../service/wallet/dailyWallet");
+const walletsService = require("../../service/wallet/wallets.js");
 const walletController = {};
 
 walletController.createNewWalletByType = (req, res) => {
@@ -51,6 +52,22 @@ walletController.getAllWallets = (req, res) => {
     .then((results) => {
       res.status(200).json({
         data: results,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
+};
+
+walletController.getAllTransByTimeRange = (req, res) => {
+  const userId = req.session.currentUser.id;
+  walletsService
+    .getAllTransByTimeRange(userId)
+    .then((results) => {
+      res.status(200).json({
+        results: results,
       });
     })
     .catch((err) => {

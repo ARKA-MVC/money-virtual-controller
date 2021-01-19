@@ -4,5 +4,6 @@ const transactionController = require("../controller/transaction/transaction.js"
 
 transactionRouter.post("/create", transactionController.createNewTransaction);
 transactionRouter.get("/getToTransactions", transactionController.getToTransactions);
-// walletRouter.get('/saving/trans_by_type/:cat_type/:wallet_id', savingWalletController.TransactionByType)
+transactionRouter.get("/getAllTransByTime", transactionController.getAllTransByTimeRange);
+
 module.exports = transactionRouter;

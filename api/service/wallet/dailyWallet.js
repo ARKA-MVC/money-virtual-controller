@@ -23,6 +23,29 @@ dailyWalletService.getAllWallets = (userId) => {
       resolve(results);
     });
   });
-}
+};
+
+dailyWalletService.getAllTransByTimeRange = (wallet, from, to) => {
+  const walletType = wallet.charAt(0);
+  const walletId = parseInt(wallet.substring(1));
+  const sql = (() => {
+    if (walletType === "d") {
+      return `CALL procDailyTransByTimeRange(${walletId}, '${from}', '${to}')`;
+    } else if (walletType === "s") {
+      return `CALL procSavingTransByTimeRange(${walletId}, '${from}', '${to}')`;
+    }
+    // if (walletType === "all") {
+
+    // }
+  })();
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      if (err) {
+        reject(new Error("Cannot get all trans in time range"));
+      }
+      resolve(results);
+    });
+  });
+};
 
 module.exports = dailyWalletService;

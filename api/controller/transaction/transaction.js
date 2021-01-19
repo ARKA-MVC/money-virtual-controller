@@ -1,4 +1,6 @@
 const transactionService = require("../../service/transaction/transaction");
+const dailyWalletService = require("../../service/wallet/dailyWallet");
+const walletController = require("../wallet/wallet");
 
 const transactionController = {};
 
@@ -167,6 +169,26 @@ transactionController.getToTransactions = (req, res) => {
         message: err.message,
       });
     });
+};
+
+transactionController.getAllTransByTimeRange = (req, res) => {
+  const wallet = req.query.walletId;
+  const from = req.query.from;
+  const to = req.query.to;
+  if (wallet !== "all") {
+    dailyWalletService
+      .getAllTransByTimeRange(wallet, from, to)
+      .then((results) => {
+        res.status(200).json({ results: results });
+      })
+      .catch((err) => {
+        res.status(500).json({
+          message: err.message,
+        });
+      });
+  } else {
+    walletController.getAllTransByTimeRange(req, res);
+  }
 };
 
 module.exports = transactionController;
