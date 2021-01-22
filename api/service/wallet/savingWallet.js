@@ -201,4 +201,18 @@ savingWalletService.deleteTransById = (transId) => {
   });
 }
 
+savingWalletService.updateWallet = (wid, wgoal, wendDate, wcur, wname) => {
+  console.log(wcur)
+  const sql = `CALL procSavingWalletEdit('${wname}', ${wgoal}, '${wendDate}', ${wcur}, ${wid})`;
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      console.log(err)
+      if (err) {
+        reject(new Error("Cannot update saving wallet"));
+      }
+      resolve("Success");
+    });
+  });
+}
+
 module.exports = savingWalletService;

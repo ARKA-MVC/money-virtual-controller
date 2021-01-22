@@ -198,4 +198,24 @@ savingWalletController.deleteTransById = (req, res) => {
     });
 }
 
+savingWalletController.updateWallet = (req, res) => {
+  const wid = req.body.id;
+  const wgoal = req.body.goalAmount;
+  const wdate = req.body.endingDate;
+  const wcur = req.body.startingAmount;
+  const wname = req.body.name;
+  savingWalletService
+    .updateWallet(parseInt(wid), parseInt(wgoal), wdate, parseInt(wcur), wname)
+    .then((results) => {
+      res.status(200).json({
+        results: results,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
+}
+
 module.exports = savingWalletController;

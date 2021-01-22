@@ -10,6 +10,7 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     display: "flex",
     flexDirection: "row",
+    position: "relative",
   },
   walletName: {
     color: "#ff9600",
@@ -20,6 +21,18 @@ const useStyles = makeStyles((theme) => ({
   lastDiv: {
     justifyItems: "end",
     textAlign: "right",
+  },
+  overlay: {
+    position: "absolute",
+    width: "100%",
+    height: "100%",
+    top: "0",
+    left: "0",
+    right: "0",
+    bottom: "0",
+    backgroundColor: "rgba(0,0,0,0)",
+    zIndex: "2",
+    cursor: "pointer",
   },
 }));
 const WalletCard = (props) => {
@@ -47,7 +60,12 @@ const WalletCard = (props) => {
         const type = e.target.getAttribute("data-type");
         deleteWallet(id, type);
       }}
+      onClick={props.onClick}
     >
+      <div
+        className={classes.overlay}
+        data-wallet={JSON.stringify(props.wallet)}
+      ></div>
       <CardContent>
         <Avatar
           alt="daily-logo"

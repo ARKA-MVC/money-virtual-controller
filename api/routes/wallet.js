@@ -34,6 +34,7 @@ walletRouter.get(
 walletRouter.post("/saving/trans/delete", savingWalletController.deleteTransById)
 walletRouter.post("/daily/trans/delete", dailyWalletController.deleteTransById)
 walletRouter.post("/daily/getSum", dailyWalletController.getTransSumByTimeRange)
-walletRouter.post("/saving/getSum", savingWalletController.getTransSumByTimeRange)
+walletRouter.post("/saving/update", savingWalletController.updateWallet)
+walletRouter.post("/daily/update", dailyWalletController.updateWallet)
 // walletRouter.get('/saving/trans_by_type/:cat_type/:wallet_id', savingWalletController.TransactionByType)
 module.exports = walletRouter;

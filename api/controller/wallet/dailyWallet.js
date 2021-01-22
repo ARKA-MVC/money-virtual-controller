@@ -69,4 +69,22 @@ dailyWalletController.getTransSumByTimeRange = (req, res) => {
     });
 }
 
+dailyWalletController.updateWallet = (req, res) => {
+  const wid = req.body.id;
+  const wname = req.body.name;
+  const amount = req.body.amount;
+  dailyWalletService
+    .updateWallet(parseInt(wid), parseInt(amount), wname)
+    .then((results) => {
+      res.status(200).json({
+        message: "Success",
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: "Cannot delete trans",
+      });
+    });
+};
+
 module.exports = dailyWalletController;

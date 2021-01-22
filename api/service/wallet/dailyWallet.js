@@ -82,4 +82,17 @@ dailyWalletService.deleteTransById = (transId) => {
   });
 };
 
+dailyWalletService.updateWallet = (wid, balance, wname) => {
+  const sql = `SET @message="";CALL procDailyWalletUpdate(${wid}, '${wname}', ${balance}, @message)`;
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      console.log(err)
+      if (err) {
+        reject(new Error("Cannot update daily wallet"));
+      }
+      resolve("Success");
+    });
+  });
+}
+
 module.exports = dailyWalletService;

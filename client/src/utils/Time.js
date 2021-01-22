@@ -7,7 +7,15 @@ const DateDiffDaysFromToday = (date) => {
 
 const StringToDate = (string) => {
   const date = new Date(string);
-  const newDate = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}` 
+  const month =
+    date.getMonth() + 1 < 10
+      ? "0" + (date.getMonth() + 1)
+      : "" + (date.getMonth() + 1);
+  const day =
+    date.getDate() < 10
+      ? "0" + (date.getDate())
+      : "" + (date.getDate());
+  const newDate = `${date.getFullYear()}-${month}-${day}`;
   return newDate;
 };
 
