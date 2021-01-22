@@ -11,9 +11,14 @@ const WalletContextProvider = (props) => {
     saving: [],
   });
   const [currentWallet, setCurrentWallet] = useState("all");
+  const [reload, setReload] = useState(true);
 
   const reloadWallets = () => {
     getAllWallets();
+  };
+
+  const forceReload = () => {
+    setReload(!reload);
   };
 
   const getAllWallets = () => {
@@ -37,7 +42,14 @@ const WalletContextProvider = (props) => {
 
   return (
     <WalletContext.Provider
-      value={{ wallets, reloadWallets, currentWallet, setCurrentWallet }}
+      value={{
+        wallets,
+        reloadWallets,
+        currentWallet,
+        setCurrentWallet,
+        reload,
+        forceReload
+      }}
     >
       {props.children}
     </WalletContext.Provider>

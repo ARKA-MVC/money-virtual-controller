@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Avatar, Card, CardContent, makeStyles } from "@material-ui/core";
-import { DateDiffDaysFromToday } from "../../utils/Time";
+import { DateDiffDaysFromToday, StringToDate } from "../../utils/Time";
 import { currencyFormat } from "../../utils/StringFormat";
 import axios from "axios";
 import { WalletContext } from "../../contexts/WalletContext";
@@ -35,6 +35,7 @@ const WalletCard = (props) => {
         console.log(err.message);
       });
   };
+
   return (
     <Card
       className={classes.card}
@@ -70,7 +71,7 @@ const WalletCard = (props) => {
           </CardContent>
           {props.size === "lg" ? (
             <CardContent className={classes.lastDiv}>
-              <div>{props.endingDate.split("T")[0]}</div>
+              <div>{StringToDate(props.endingDate)}</div>
               <div>
                 {DateDiffDaysFromToday(props.endingDate) > 0
                   ? DateDiffDaysFromToday(props.endingDate) + " days to go"

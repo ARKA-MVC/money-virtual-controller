@@ -34,9 +34,6 @@ dailyWalletService.getAllTransByTimeRange = (wallet, from, to) => {
     } else if (walletType === "s") {
       return `CALL procSavingTransByTimeRange(${walletId}, '${from}', '${to}')`;
     }
-    // if (walletType === "all") {
-
-    // }
   })();
   return new Promise((resolve, reject) => {
     pool.query(sql, (err, results) => {
@@ -54,6 +51,31 @@ dailyWalletService.deleteWallet = (id) => {
     pool.query(sql, (err, results) => {
       if (err) {
         reject(new Error("Cannot delete wallet"));
+      }
+      resolve("Success");
+    });
+  });
+};
+
+dailyWalletService.getTransSumByTimeRange = (userId, from, to) => {
+  const sql = `CALL procDailyTransSumByCategory(${userId}, '${from}', '${to}')`;
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      console.log(err);
+      if (err) {
+        reject(new Error("Cannot get sum all trans in time range"));
+      }
+      resolve(results);
+    });
+  });
+};
+
+dailyWalletService.deleteTransById = (transId) => {
+  const sql = `SET @message="";CALL procDailyTransDelete(${transId}, @message)`;
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      if (err) {
+        reject(new Error("Cannot delete trans"));
       }
       resolve("Success");
     });

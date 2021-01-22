@@ -18,8 +18,11 @@ import red from "@material-ui/core/colors/red";
 import blue from "@material-ui/core/colors/blue";
 import yellow from "@material-ui/core/colors/yellow";
 import indigo from "@material-ui/core/colors/indigo";
-import React from "react";
+import React, { useContext } from "react";
 import { currencyFormat } from "../../utils/StringFormat.js";
+import { StringToDate } from "../../utils/Time.js";
+import axios from "axios";
+import { WalletContext } from "../../contexts/WalletContext";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -100,6 +103,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const TransactionList = (props) => {
+  const { reloadWallets, forceReload } = useContext(WalletContext);
   const allTransactions = props.listTransactions;
   const classes = useStyles();
   const renderAvatar = (type) => {
@@ -168,17 +172,46 @@ const TransactionList = (props) => {
         return null;
     }
   };
+
+  const handleOnDragEndRow = (e) => {
+    const rowId = e.target.getAttribute("value");
+    const walletType = rowId.split("-")[0];
+    const transId = rowId.split("-")[1];
+    const path =
+      walletType === "s"
+        ? "/wallet/saving/trans/delete"
+        : "/wallet/daily/trans/delete";
+    axios
+      .post(path, { transId: transId })
+      .then((results) => {
+        console.log(results);
+        forceReload();
+        reloadWallets();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   const renderListTransactions = () => {
     let listTransactions = [];
     let itemTransaction;
     itemTransaction = allTransactions.map((item, index) => {
+      const rowId = (item.saving_id !== null ? "s-" : "d-") + item.id;
       return (
-        <TableRow key={item.id} value={item.id}>
+        <TableRow
+          key={item.id}
+          value={rowId}
+          draggable="true"
+          onDragEnd={(e) => {
+            handleOnDragEndRow(e);
+          }}
+        >
           <TableCell component="th" scope="row">
             {renderAvatar(item.type)}
           </TableCell>
+          <TableCell align="left">{item.wname}</TableCell>
+          <TableCell align="left">{item.name}</TableCell>
           <TableCell align="left">{item.note}</TableCell>
-          <TableCell align="left">{item.type}</TableCell>
           <TableCell align="right">
             {currencyFormat.format(item.amount)}
           </TableCell>
@@ -188,7 +221,7 @@ const TransactionList = (props) => {
               : null}
           </TableCell>
           <TableCell align="right">
-            {item.transaction_time.toString().split("T")[0]}
+            {StringToDate(item.transaction_time)}
           </TableCell>
         </TableRow>
       );
@@ -203,9 +236,10 @@ const TransactionList = (props) => {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>#</TableCell>
-              <TableCell align="left">Note</TableCell>
+              <TableCell align="center">#</TableCell>
+              <TableCell align="left">Wallet</TableCell>
               <TableCell align="left">Category</TableCell>
+              <TableCell align="left">Note</TableCell>
               <TableCell align="right">Amount</TableCell>
               <TableCell align="right">Remaining</TableCell>
               <TableCell align="right">Time</TableCell>

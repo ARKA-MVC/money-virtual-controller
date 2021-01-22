@@ -35,8 +35,8 @@ const useStyles = makeStyles((theme) => ({
   paper: {
     height: "auto",
     width: "70%",
-    maxWidth: "800px",
-    minWidth: "600px",
+    maxWidth: "950px",
+    minWidth: "800px",
     margin: "0 auto",
   },
   gridRadioGroup: {
@@ -55,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Transactions = () => {
-  const { currentWallet } = useContext(WalletContext);
+  const { currentWallet, reload } = useContext(WalletContext);
   const [date, setDate] = useState({ from: firstDay, to: lastDay });
   const [selected, setSelected] = useState("ThisMonth");
   const classes = useStyles();
@@ -73,8 +73,8 @@ const Transactions = () => {
       }
     })();
     getTransByTimeRange(timeRange);
-    console.log(listTrans);
-  }, [selected, currentWallet]);
+    console.log(currentWallet);
+  }, [selected, currentWallet, date, reload]);
 
   const getTransByTimeRange = (timeRange) => {
     axios
@@ -90,6 +90,7 @@ const Transactions = () => {
         { withCredentials: true }
       )
       .then((results) => {
+        console.log(results.data.results[0]);
         setListTrans(results.data.results[0]);
       })
       .catch((err) => {
@@ -163,7 +164,7 @@ const Transactions = () => {
                         shrink: true,
                       }}
                       onChange={(e) => {
-                        setDate(e.target.value);
+                        setDate({ ...date, from: e.target.value });
                       }}
                       required
                     />
@@ -176,7 +177,7 @@ const Transactions = () => {
                         shrink: true,
                       }}
                       onChange={(e) => {
-                        setDate(e.target.value);
+                        setDate({ ...date, to: e.target.value });
                       }}
                       required
                     />

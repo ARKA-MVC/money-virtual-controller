@@ -175,4 +175,30 @@ savingWalletService.deleteWallet = (id) => {
   });
 };
 
+savingWalletService.getTransSumByTimeRange = (userId, from, to) => {
+  const sql = `CALL procSavingTransSumByCategory(${userId}, '${from}', '${to}')`;
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      console.log(err)
+      if (err) {
+        reject(new Error("Cannot get sum all trans in time range"));
+      }
+      resolve(results);
+    });
+  });
+}
+
+savingWalletService.deleteTransById = (transId) => {
+  const sql = `CALL procSavingTransDelete(${transId})`;
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, results) => {
+      console.log(err)
+      if (err) {
+        reject(new Error("Cannot del saving trans"));
+      }
+      resolve(results);
+    });
+  });
+}
+
 module.exports = savingWalletService;

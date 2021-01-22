@@ -5,4 +5,10 @@ const DateDiffDaysFromToday = (date) => {
   return diffDays;
 };
 
-export { DateDiffDaysFromToday };
+const StringToDate = (string) => {
+  const date = new Date(string);
+  const newDate = `${date.getFullYear()}-${(date.getMonth() + 1)}-${date.getDate()}` 
+  return newDate;
+};
+
+export { DateDiffDaysFromToday, StringToDate };

@@ -37,4 +37,36 @@ dailyWalletController.deleteWallet = (req, res) => {
     });
 };
 
+dailyWalletController.deleteTransById = (req, res) => {
+  const transId = req.body.transId;
+  dailyWalletService
+    .deleteTransById(parseInt(transId))
+    .then((results) => {
+      res.status(200).json({
+        message: "Success",
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: "Cannot delete trans",
+      });
+    });
+};
+
+dailyWalletController.getTransSumByTimeRange = (req, res) => {
+  const userId = req.session.currentUser.id;
+  dailyWalletService
+    .getTransSumByTimeRange(parseInt(userId), req.body.from, req.body.to)
+    .then((results) => {
+      res.status(200).json({
+        results: results,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
+}
+
 module.exports = dailyWalletController;

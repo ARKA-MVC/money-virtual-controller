@@ -65,8 +65,26 @@ walletController.getAllWallets = (req, res) => {
 
 walletController.getAllTransByTimeRange = (req, res) => {
   const userId = req.session.currentUser.id;
+  const from = req.query.from;
+  const to = req.query.to;
   walletsService
-    .getAllTransByTimeRange(userId)
+    .getAllTransByTimeRange(userId, from, to)
+    .then((results) => {
+      res.status(200).json({
+        results: results,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
+};
+
+walletController.getSumAllTransByTimeRange = (req, res) => {
+  const userId = req.session.currentUser.id;
+  walletsService
+    .getSumAllTransByTimeRange(parseInt(userId), req.body.from, req.body.to)
     .then((results) => {
       res.status(200).json({
         results: results,

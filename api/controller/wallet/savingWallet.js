@@ -166,4 +166,36 @@ savingWalletController.deleteWallet = (req, res) => {
     });
 };
 
+savingWalletController.getTransSumByTimeRange = (req, res) => {
+  const userId = req.session.currentUser.id;
+  savingWalletService
+    .getTransSumByTimeRange(parseInt(userId), req.body.from, req.body.to)
+    .then((results) => {
+      res.status(200).json({
+        results: results,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
+}
+
+savingWalletController.deleteTransById = (req, res) => {
+  const transId = req.body.transId;
+  savingWalletService
+    .deleteTransById(parseInt(transId))
+    .then((results) => {
+      res.status(200).json({
+        results: results,
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({
+        message: err.message,
+      });
+    });
+}
+
 module.exports = savingWalletController;

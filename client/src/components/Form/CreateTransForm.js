@@ -42,7 +42,9 @@ const CreateTransForm = React.forwardRef((props, ref) => {
   });
   const [transList, setTransList] = useState([]);
   const [concatString, setConcatString] = useState("");
-  const { reloadWallets } = useContext(WalletContext);
+  const { reloadWallets, forceReload } = useContext(WalletContext);
+  const [amountLimit, setAmountLimit] = useState("");
+  const [selectedTrans, setSelectedTrans] = useState("");
 
   const handleWalletSelected = (concatString) => {
     setConcatString(concatString);
@@ -65,9 +67,23 @@ const CreateTransForm = React.forwardRef((props, ref) => {
 
   useEffect(() => {
     if (categoryId === "DC-23" || categoryId === "R-24") {
+      const getToTransactions = () => {
+        axios
+          .get("/trans/getToTransactions", {
+            params: { categoryId: categoryId, walletId: walletId },
+          })
+          .then((res) => {
+            console.log(res.data.results);
+            setTransList(res.data.results);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      };
       getToTransactions();
     }
     setToTransaction("");
+    setSelectedTrans("");
   }, [categoryId]);
 
   const getCategoriesDaily = () => {
@@ -122,28 +138,24 @@ const CreateTransForm = React.forwardRef((props, ref) => {
         console.log(err);
       });
   };
-  const getToTransactions = () => {
-    axios
-      .get("/trans/getToTransactions", {
-        params: { categoryId: categoryId, walletId: walletId },
-      })
-      .then((res) => {
-        console.log(res.data.results);
-        setTransList(res.data.results);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
+    const categoryID = categoryId.toString().split("-")[1];
+    const categoryType = categoryId.toString().split("-")[0];
+    if ((categoryType === "R" || categoryType === "DC") && amount > amountLimit) {
+      alert("You can't repay/collect more than the remaining amount");
+      return false;
+    }
+    console.log(amountLimit);
+    console.log(categoryType)
     const transaction = {
       walletType: walletType,
       walletId: walletId,
       note: note,
       amount: amount,
-      categoryId: categoryId.toString().split("-")[1],
-      categoryType: categoryId.toString().split("-")[0],
+      categoryId: categoryID,
+      categoryType: categoryType,
       toTransaction: toTransaction,
       transactionTime: date,
     };
@@ -153,13 +165,20 @@ const CreateTransForm = React.forwardRef((props, ref) => {
       .then((res) => {
         console.log(res);
         reloadWallets();
+        forceReload();
         props.handleModalAction();
       })
       .catch((err) => {
         console.log(err);
       });
   };
-
+  const handleTransSelected = (trans) => {
+    const transId = trans.split("-")[0];
+    const remaining = parseFloat(trans.split("-")[1]);
+    setSelectedTrans(trans);
+    setToTransaction(transId);
+    setAmountLimit(remaining);
+  };
   return (
     <Container component="main" maxWidth="xs" style={{ maxWidth: "800px" }}>
       <CssBaseline />
@@ -214,8 +233,8 @@ const CreateTransForm = React.forwardRef((props, ref) => {
                 <TransactionSelect
                   variant="outlined"
                   listTransactions={transList}
-                  state={toTransaction}
-                  setState={setToTransaction}
+                  state={selectedTrans}
+                  setState={handleTransSelected}
                   fullWidth
                   required
                 ></TransactionSelect>

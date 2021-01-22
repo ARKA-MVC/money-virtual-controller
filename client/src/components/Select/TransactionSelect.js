@@ -12,7 +12,7 @@ import deepPurple from "@material-ui/core/colors/deepPurple";
 import green from "@material-ui/core/colors/green";
 import pink from "@material-ui/core/colors/pink";
 import React from "react";
-import { currencyFormat } from "../../utils/StringFormat.js"
+import { currencyFormat } from "../../utils/StringFormat.js";
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   },
   walletName: {
     color: "#ff9600",
-    width: "300px"
+    width: "300px",
   },
   middleDiv: {
     display: "flex",
@@ -78,12 +78,11 @@ const useStyles = makeStyles((theme) => ({
 
 const TransactionSelect = (props) => {
   const allTransactions = props.listTransactions;
-  console.log(allTransactions);
   const classes = useStyles();
   const handleSelectTransaction = (event) => {
     const targetVal = event.target.value;
-    console.log(targetVal);
-    props.setState(targetVal !== undefined ? targetVal : "");
+    if (targetVal === undefined) return;
+    props.setState(targetVal);
   };
   const renderAvatar = (transactionId) => {
     switch (transactionId) {
@@ -135,31 +134,31 @@ const TransactionSelect = (props) => {
     let listTransactions = [];
     let itemTransaction;
     if (allTransactions.length > 0) {
-      itemTransaction = allTransactions.map(
-        (item, index) => {
-          return (
-            <MenuItem key={index} value={item.id}>
-              <div className={classes.card}>
-                <div>{renderAvatar(item.category_id)}</div>
-                <div
-                  className={
-                    props.compactSize
-                      ? classes.middleDivCompactSize
-                      : classes.middleDiv
-                  }
-                >
-                  <div className={classes.walletName}>{item.note}</div>
-                  <div>T: {currencyFormat.format(item.amount)}</div>
-                  <div>R: {currencyFormat.format(item.remaining)}</div>
-                  <div>{item.transaction_time.toString().split("T")[0]}</div>
-                </div>
+      itemTransaction = allTransactions.map((item, index) => {
+        return (
+          <MenuItem key={index} value={item.id + "-" + item.remaining}>
+            <div className={classes.card}>
+              <div>{renderAvatar(item.category_id)}</div>
+              <div
+                className={
+                  props.compactSize
+                    ? classes.middleDivCompactSize
+                    : classes.middleDiv
+                }
+              >
+                <div className={classes.walletName}>{item.note}</div>
+                <div>T: {currencyFormat.format(item.amount)}</div>
+                <div>R: {currencyFormat.format(item.remaining)}</div>
+                <div>{item.transaction_time.toString().split("T")[0]}</div>
               </div>
-            </MenuItem>
-          );
-        }
-      );
+            </div>
+          </MenuItem>
+        );
+      });
     } else {
-      itemTransaction = (<ListSubheader key="lshd">You don't have any Debt/Loan</ListSubheader>);
+      itemTransaction = (
+        <ListSubheader key="lshd">You don't have any Debt/Loan</ListSubheader>
+      );
     }
     listTransactions.push(itemTransaction);
     return listTransactions;
